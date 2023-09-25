@@ -1,18 +1,20 @@
-# Neural predictions of multiple outcome attributes and their sensitivity to devaluation in human Pavlovian learning
+# Neural substrates of parallel devaluation-sensitive and devaluation-insensitive Pavlovian learning in humans
 
 The repository contains all scripts needed to reproduce the results reported in the above study.
 
 # Data
 
-the data are available at: 
+the raw dataset are available at: 
 
 # Code
 
 the code is split in three main folders
 
-* ./univariate - scripts for the massive univariate analysis (Matlab R2017 or higher, with SPM 12  and AFNI 20.3)
+* ./R contains the functions to compute the variables of interest
 
-* ./multivariate - scripts for the massive univariate analysis (Matlab R2017 Python 2.7, with SPM 12 and pyMVPA) 
+* ./datasets contains the compiled dataset for the analysis
 
-* ./behavioral - scripts for the behavioral analysis and behavioral-brain interactions (R 3.6.0 or higher)
+* ./figures is an output folder where the figures are saved
+
+
  
