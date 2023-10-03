@@ -77,6 +77,8 @@ db.pupil.change <- subset(PUPIL.mean, run == 2)
 
 db.pupil.change$CS_ID <- dplyr::recode(db.pupil.change$CS_ID, deval = 'Devalued', 
                                        val = 'Valued')
+
+
 db.pupil.change.bc = summarySEwithin(db.pupil.change,
                                      measurevar = c("pupil_change"),
                                      withinvars = c("CS_ID"),
@@ -106,9 +108,20 @@ pupil.deval.pp <-  ggplot(data = db.pupil.change,
 pupil.deval.pp = pupil.deval.pp  + timeline_theme + theme(legend.position="none")  + 
   theme(axis.text.y = element_text(angle=90, vjust= 1, hjust=.5))
 
-pdf(file.path(figures_path,'Supplementary_Figure_%_A.pdf'),width=5,height=8)
+pdf(file.path(figures_path,'Supplementary_Figure_5_A.pdf'),width=5,height=8)
 print(pupil.deval.pp )
 dev.off() 
+
+
+#  write source file
+PUPIL.individual = db.pupil.change[c('ID','CS_ID', 'pupil_change')]
+write.csv(PUPIL.individual ,file.path(figures_path, 'SourceData_Supplementary_Figure_5_A_individual_estimates.csv'))
+
+PUPIL.aggregate = db.pupil.change.bc[c('CS_ID','pupil_change','se','N')]
+PUPIL.aggregate$mean = PUPIL.aggregate$pupil_change 
+PUPIL.aggregate <- subset(PUPIL.aggregate, select = -c(pupil_change ))
+write.csv(PUPIL.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_5_A_aggregate_estimates.csv'))
+
 
 
 # ----------------------------------- Dwell Time -------------------------------
@@ -148,9 +161,20 @@ dw.deval.pp =  dw.deval.pp + timeline_theme + theme(legend.position="none")  +
   theme(axis.text.y = element_text(angle=90, vjust= 1, hjust=.5))
 
 #print
-pdf(file.path(figures_path,'Supplementary_Figure_%_B.pdf'),width=5,height=8)
+pdf(file.path(figures_path,'Supplementary_Figure_5_B.pdf'),width=5,height=8)
 print(dw.deval.pp )
 dev.off()
+
+#  write source file
+DW.individual = db.dw.change[c('ID','CS_ID', 'dw_change')]
+write.csv(DW.individual ,file.path(figures_path, 'SourceData_Supplementary_Figure_5_B_individual_estimates.csv'))
+
+DW.aggregate = db.dw.change.bc[c('CS_ID','dw_change','se','N')]
+DW.aggregate$mean = DW.aggregate$dw_change 
+DW.aggregate <- subset(DW.aggregate, select = -c(dw_change ))
+write.csv(DW.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_5_B_aggrgate_estimates.csv'))
+
+
 
 
 # ----------------------------------- RPE ROI ----------------------------------
@@ -193,6 +217,18 @@ pp.rpe.roi.deval <- pp.rpe.roi.deval + theme_bw( ) + pannel_theme
 pdf(file.path(figures_path,'Supplementary_Figure_6.pdf'),width=8,height=5)
 print(pp.rpe.roi.deval)
 dev.off()
+
+
+#  write source file
+source.supp.rpe.bs = supp.rpe.bs[c('ID','roi', 'value','betas')]
+write.csv(source.supp.rpe.bs,file.path(figures_path, 'SourceData_Supplementary_Figure_6_individual_estimates.csv'))
+
+SUPP.RPE.aggregate = supp.sumstat.rpe[c('roi','value','betas','se','N')]
+SUPP.RPE.aggregate$mean = SUPP.RPE.aggregate$betas
+SUPP.RPE.aggregate <- subset(SUPP.RPE.aggregate, select = -c(betas ))
+write.csv(SUPP.RPE.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_6_aggregate_estimates.csv'))
+
+
 
 
 
@@ -242,6 +278,16 @@ print(pp.spe.roi.deval)
 dev.off()
 
 
+#  write source file
+source.supp.spe.bs = supp.spe.bs[c('ID','roi', 'value','betas')]
+write.csv(source.supp.rpe.bs,file.path(figures_path, 'SourceData_Supplementary_Figure_7_individual_estimates.csv'))
+
+SUPP.SPE.aggregate = supp.sumstat.spe[c('roi','value','betas','se','N')]
+SUPP.SPE.aggregate$mean = SUPP.SPE.aggregate$betas
+SUPP.SPE.aggregate <- subset(SUPP.SPE.aggregate, select = -c(betas ))
+write.csv(SUPP.SPE.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_7_aggregate_estimates.csv'))
+
+
 
 # ----------------------------------- ID ROI --------------------------------------
 
@@ -282,6 +328,17 @@ pdf(file.path(figures_path,'Supplementary_Figure_8.pdf'),width=8,height=5)
 print(pp.id.roi.deval)
 dev.off()
 
+#  write source file
+source.supp.id.bs = id.bs[c('ID','roi', 'CS','index')]
+write.csv(source.supp.id.bs,file.path(figures_path, 'SourceData_Supplementary_Figure_8_individual_estimates.csv'))
+
+SUPP.ID.aggregate = sumstat.id[c('roi','CS','index','se','N')]
+SUPP.ID.aggregate$mean = SUPP.ID.aggregate$index
+SUPP.ID.aggregate <- subset(SUPP.ID.aggregate, select = -c(index))
+write.csv(SUPP.ID.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_8_aggregate_estimates.csv'))
+
+
+
 
 # ---------------------------------- SIDE ROI ---------------------------
 side.bs = subset (SIDE_long, prepost == "post")
@@ -298,7 +355,7 @@ sumstat.side <- summarySEwithin(side.bs.m,
                                 idvar = "ID")
 
 
-pp.side.roi.deval <- ggplot(data = side.bs, aes(x = CS, y = index, fill = CS, color = CS)) +
+pp.side.roi.deval <- ggplot(data = side.bs.m, aes(x = CS, y = index, fill = CS, color = CS)) +
   geom_abline(slope = 0, intercept = 0, linetype= "dashed", color="black") +
   geom_point(aes(x = CS,
                  y = index, group = ID), 
@@ -326,6 +383,15 @@ print(pp.side.roi.deval)
 dev.off()
 
 
+
+#  write source file
+source.supp.side.bs = side.bs.m[c('ID','roi', 'CS','index')]
+write.csv(source.supp.side.bs,file.path(figures_path, 'SourceData_Supplementary_Figure_9_individual_estimates.csv'))
+
+SUPP.SIDE.aggregate = sumstat.side[c('roi','CS','index','se','N')]
+SUPP.SIDE.aggregate$mean = SUPP.SIDE.aggregate$index
+SUPP.SIDE.aggregate <- subset(SUPP.SIDE.aggregate, select = -c(index))
+write.csv(SUPP.SIDE.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_9_aggregate_estimates.csv'))
 
 
 
@@ -381,6 +447,15 @@ parameter_distribution = parameter_distribution + timeline_theme +theme(legend.p
 cairo_pdf(file.path(figures_path,'Supplementary_Figure_3.pdf'))
 print(parameter_distribution)
 dev.off() 
+
+#  write source file
+write.csv(db.free_parameters,file.path(figures_path, 'SourceData_Supplementary_Figure_3_individual_estimates.csv'))
+
+parameters.aggregate = db.free_parameters.bg[c('parameter_name','parameter_value','se','N')]
+parameters.aggregate$mean = parameters.aggregate$parameter_value
+parameters.aggregate <- subset(parameters.aggregate, select = -c(parameter_value))
+write.csv(parameters.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_3_aggregate_estimates.csv'))
+
 
 
 
@@ -496,6 +571,15 @@ ID.control.acc.pp <- ggplot(data = Plot.R.ID_acc.long, aes (x=ROI, y = accuracy,
 ID.control.acc.pp  = ID.control.acc.pp + timeline_theme + theme(legend.position="none") 
 
 
+#  write source file
+write.csv(Plot.R.ID_acc.long,file.path(figures_path, 'SourceData_Supplementary_Figure_2_B_individual_estimates.csv'))
+
+aggregate.control.acc.id = sumstat.id.control.acc[c('ROI','accuracy','se','N')]
+aggregate.control.acc.id$mean = aggregate.control.acc.id$accuracy
+aggregate.control.acc.id <- subset(aggregate.control.acc.id, select = -c(accuracy))
+write.csv(aggregate.control.acc.id,file.path(figures_path, 'SourceData_Supplementary_Figure_2_B_aggregate_estimates.csv'))
+
+
 
 # Plot SIDE
 
@@ -525,7 +609,17 @@ SIDE.control.acc.pp <- ggplot(data = Plot.R.SIDE_acc.long, aes (x=ROI, y = accur
 
 SIDE.control.acc.pp  = SIDE.control.acc.pp + timeline_theme + theme(legend.position="none") 
 
+#  write source file
+write.csv(Plot.R.SIDE_acc.long,file.path(figures_path, 'SourceData_Supplementary_Figure_2_A_individual_estimates.csv'))
 
+aggregate.control.acc.side = sumstat.side.control.acc[c('ROI','accuracy','se','N')]
+aggregate.control.acc.side$mean = aggregate.control.acc.side$accuracy
+aggregate.control.acc.side <- subset(aggregate.control.acc.side, select = -c(accuracy))
+write.csv(aggregate.control.acc.side,file.path(figures_path, 'SourceData_Supplementary_Figure_2_A_aggregate_estimates.csv'))
+
+
+
+# Plot compiled figure
 control.acc.pp = plot_grid(SIDE.control.acc.pp, ID.control.acc.pp, ncol = 1, labels=c('A', 'B'), scale = 0.9, label_size = 28)
 
 
@@ -643,6 +737,15 @@ pdf(file.path(figures_path,'Supplementary_Figure_1.pdf'))
 print(p_US_ID_check )
 dev.off() 
 
+#  write source file
+write.csv(FOOD.m,file.path(figures_path, 'SourceData_Supplementary_Figure_1_individual_estimates.csv'))
+
+aggregate.food = FOOD.m.bg[c('US_ID','outcome_liking','se','N')]
+aggregate.food$mean = aggregate.food$outcome_liking
+aggregate.food <- subset(aggregate.food, select = -c(outcome_liking))
+write.csv(aggregate.food,file.path(figures_path, 'SourceData_Supplementary_Figure_1_aggregate_estimates.csv'))
+
+
 #-------------------------------------------------------------------------------
 #                  REVIEWER 2
 #-------------------------------------------------------------------------------
@@ -699,4 +802,13 @@ dev.off()
 anova(lmer(hunger ~ run + (1| ID), data = subset(HUNGER, run != "1"), control = my_control))
 anova(lmer(hunger ~ run + (1| ID), data = subset(HUNGER, run != "3"), control = my_control))
 anova(lmer(hunger ~ run + (1| ID), data = subset(HUNGER, run != "2"), control = my_control))
+
+
+#  write source file
+write.csv(HUNGER,file.path(figures_path, 'SourceData_Supplementary_Figure_4_individual_estimates.csv'))
+
+aggregate.hunger = HUNGER.bg[c('run','hunger','se','N')]
+aggregate.hunger$mean = aggregate.hunger$hunger
+aggregate.hunger  <- subset(aggregate.hunger, select = -c(hunger))
+write.csv(aggregate.hunger,file.path(figures_path, 'SourceData_Supplementary_Figure_4_aggregate_estimates.csv'))
 

@@ -304,7 +304,14 @@ pdf(file.path(figures_path,'Figure_1C.pdf'))
 print(p_deval_check)
 dev.off() 
 
+# write source file of the figure
+FOOD.individual = FOOD.c[c('ID','run', 'US_ID', 'US_value', 'outcome_liking')]
+write.csv(FOOD.individual,file.path(figures_path, 'SourceData_1C_individual_estimates.csv'))
 
+FOOD.aggregate = FOOD.bg[c('US_value','run','outcome_liking','se','N')]
+FOOD.aggregate$mean = FOOD.aggregate$outcome_liking
+FOOD.aggregate <- subset(FOOD.aggregate , select = -c(outcome_liking))
+write.csv(FOOD.aggregate,file.path(figures_path, 'SourceData_1C_aggrgate_estimates.csv'))
 
 
 #-------------------------------------------------------------------------------
@@ -393,7 +400,7 @@ describe_posterior(fit_dw_change, estimate = "median",
 DEV_BEHAV.long <- gather(DEV_BEHAV, eyes_response, Mean_diff, dw_deval:pupil_deval, factor_key=TRUE)
      
      
-DEV_BEHAV.long$eyes_response <- recode(DEV_BEHAV.long$eyes_response, pupil_deval = "Pupil",
+DEV_BEHAV.long$eyes_response <- dplyr::recode(DEV_BEHAV.long$eyes_response, pupil_deval = "Pupil",
                                             dw_deval = "Dwell time")
      
      
@@ -428,6 +435,17 @@ eyes.deval.pp = eyes.deval.pp  + timeline_theme + theme(legend.position="none") 
 pdf(file.path(figures_path,'Figure_2C.pdf'),width=5,height=8)
 print(eyes.deval.pp)
 dev.off() 
+
+
+# write source file of the figure
+
+write.csv(DEV_BEHAV.long,file.path(figures_path, 'SourceData_2C_individual_estimates.csv'))
+
+DEV_BEHAV.aggregate = sumstat.eyes[c('eyes_response','N','Mean_diff','ci')]
+DEV_BEHAV.aggregate$mean = DEV_BEHAV.aggregate$Mean_diff
+DEV_BEHAV.aggregate <- subset(DEV_BEHAV.aggregate , select = -c(Mean_diff))
+write.csv(DEV_BEHAV.aggregate,file.path(figures_path, 'SourceData_2C_aggregated_estimates.csv'))
+
 
 
 #-------------------------------------------------------------------------------

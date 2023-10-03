@@ -176,6 +176,11 @@ pdf(file.path(figures_path,'Figure_4A.pdf'))
 print(pp_lin_spe)
 dev.off()
 
+# write source file
+DB.spe.individual = DB.spe[c('ID','feature', 'betas', 'RT_PE', 'RT')]
+write.csv(DB.spe.individual,file.path(figures_path, 'SourceData_4A.csv'))
+
+
 
 # pannel B
 DB.rpe = subset(DB.all, feature == "RPE")
@@ -202,5 +207,7 @@ print(pp_lin_rpe)
 dev.off()
 
 
-
+# write source file
+DB.rpe.individual = DB.rpe[c('ID','feature', 'betas', 'RT_PE', 'RT')]
+write.csv(DB.rpe.individual ,file.path(figures_path, 'SourceData_4B.csv'))
 

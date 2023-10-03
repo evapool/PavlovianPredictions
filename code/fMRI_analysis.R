@@ -305,6 +305,14 @@ pdf(file.path(figures_path,'Figure_3B_RPE.pdf'))
 print(rpe.deval.pp)
 dev.off() 
 
+# write sourcefile
+rpe.bs.source = rpe.bs[c('ID','roi', 'feature', 'diff_betas')]
+write.csv(rpe.bs.source,file.path(figures_path, 'SourceData_3B_RPE_individual_estimates.csv'))
+
+sumstat.rpe$mean = sumstat.rpe$diff_betas
+rpe.bs.aggregate = sumstat.rpe[c('roi','N', 'mean', 'ci')]
+write.csv(rpe.bs.aggregate,file.path(figures_path, 'SourceData_3B_RPE_aggregated_estimates.csv'))
+
 
 
 #--------------------- PLOT SPE -------------------------------------------------
@@ -332,6 +340,16 @@ spe.deval.pp = spe.deval.pp + timeline_theme + theme(legend.position="none")
 pdf(file.path(figures_path,'Figure_3B_SPE.pdf'))
 print(spe.deval.pp)
 dev.off() 
+
+
+# write sourcefile
+spe.bs.source = spe.bs[c('ID','roi', 'feature', 'diff_betas')]
+write.csv(spe.bs.source,file.path(figures_path, 'SourceData_3B_SPE_individual_estimates.csv'))
+
+sumstat.spe$mean = sumstat.spe$diff_betas
+spe.bs.aggregate = sumstat.spe[c('roi','N', 'mean', 'ci')]
+write.csv(spe.bs.aggregate,file.path(figures_path, 'SourceData_3B_SPE_aggregated_estimates.csv'))
+
 
 
 
@@ -647,6 +665,17 @@ pdf(file.path(figures_path,'Figure_5B_identity.pdf'))
 print(id.deval.pp)
 dev.off() 
 
+# write sourcefile
+id.bs$mean_diff = id.bs$index2
+id.bs.source = id.bs[c('ID','roi', 'mean_diff')]
+write.csv(id.bs.source,file.path(figures_path, 'SourceData_5B_identity_individual_estimates.csv'))
+
+
+sumstat.id$mean = sumstat.id$index2 
+id.aggregate = sumstat.id[c('roi','N', 'mean', 'ci')]
+write.csv(id.aggregate,file.path(figures_path, 'SourceData_5B_identity_aggregated_estimates.csv'))
+
+
 
 
 #--------------------------- PLOT SIDE -------------------------------------------------
@@ -689,6 +718,15 @@ pdf(file.path(figures_path,'Figure_5B_side.pdf'))
 print(side.deval.pp)
 dev.off()
 
+# write sourcefile
+side.bs$mean_diff =  side.bs$index2
+side.bs.source =  side.bs[c('ID','roi', 'mean_diff')]
+write.csv(side.bs.source,file.path(figures_path, 'SourceData_5B_side_individual_estimates.csv'))
+
+
+sumstat.side$mean = sumstat.side$index2 
+side.aggregate = sumstat.side[c('roi','N', 'mean', 'ci')]
+write.csv(side.aggregate,file.path(figures_path, 'SourceData_5B_side_aggregated_estimates.csv'))
 
 
 
