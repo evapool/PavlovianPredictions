@@ -4,7 +4,7 @@ The repository contains all scripts needed to reproduce the results reported in 
 
 # Data
 
-the raw dataset are available at: 
+the fMRI dataset here: https://doi.org/10.26037/yareta:dyhmmxkwkfbwvaq4yotxziszva
 
 # Code
 

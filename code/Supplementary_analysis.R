@@ -172,7 +172,7 @@ write.csv(DW.individual ,file.path(figures_path, 'SourceData_Supplementary_Figur
 DW.aggregate = db.dw.change.bc[c('CS_ID','dw_change','se','N')]
 DW.aggregate$mean = DW.aggregate$dw_change 
 DW.aggregate <- subset(DW.aggregate, select = -c(dw_change ))
-write.csv(DW.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_5_B_aggrgate_estimates.csv'))
+write.csv(DW.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_5_B_aggregate_estimates.csv'))
 
 
 
