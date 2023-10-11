@@ -219,8 +219,8 @@ LEARN_ID_pcl <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mv
 LEARN_SIDE_cuneus <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_Cuneus_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
 LEARN_SIDE_ips    <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_R_IPS_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
 LEARN_SIDE_latocc <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_R_LATOCC_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
-LEARN_SIDE_stg_l  <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_STG_L_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
-LEARN_SIDE_stg_r  <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_STG_R_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
+LEARN_SIDE_smg_l  <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_STG_L_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
+LEARN_SIDE_smg_r  <- read.delim(file.path(dabases_path,'MVPA_ROI','Database-PAVMOD-mvpaSIDE_STG_R_mvpaSIDE.txt'), header = T, sep ='') # read dataset 
 
 
 fac = c("ID", "roi","prepost", "CS")
@@ -258,8 +258,8 @@ SIDE_long <- gather(ROI_SIDE, ROI, betas, value_corr_pre_in_Cuneus:devalue_corr_
 SIDE_long[grepl("Cuneus", SIDE_long$ROI), "roi"] <- "Cuneus"
 SIDE_long[grepl("R_IPS", SIDE_long$ROI), "roi"] <- "IPS"
 SIDE_long[grepl("LATOCC", SIDE_long$ROI), "roi"] <- "LACTOCC"
-SIDE_long[grepl("STG_L", SIDE_long$ROI), "roi"] <- "STG"
-SIDE_long[grepl("STG_R", SIDE_long$ROI), "roi"] <- "STG"
+SIDE_long[grepl("STG_L", SIDE_long$ROI), "roi"] <- "SMG"
+SIDE_long[grepl("STG_R", SIDE_long$ROI), "roi"] <- "SMG"
 
 # side
 SIDE_long[grepl("Cuneus", SIDE_long$ROI), "laterality"] <- "bilateral"
@@ -550,8 +550,8 @@ R.LEARN_ID_pcl <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','id',
 R.LEARN_SIDE_cuneus <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','Cuneus_ACC.txt'), header = T, sep ='') # read dataset 
 R.LEARN_SIDE_ips    <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','R_IPS_ACC.txt'), header = T, sep ='') # read dataset 
 R.LEARN_SIDE_latocc <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','R_LATOCC_ACC.txt'), header = T, sep ='') # read dataset 
-R.LEARN_SIDE_stg_l  <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','STG_L_ACC.txt'), header = T, sep ='') # read dataset 
-R.LEARN_SIDE_stg_r  <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','STG_R_ACC.txt'), header = T, sep ='') # read dataset 
+R.LEARN_SIDE_smg_l  <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','STG_L_ACC.txt'), header = T, sep ='') # read dataset 
+R.LEARN_SIDE_smg_r  <- read.delim(file.path(dabases_path,'MVPA_ROI','revisions','side','STG_R_ACC.txt'), header = T, sep ='') # read dataset 
 
 
 # create dabase for plots
@@ -570,6 +570,6 @@ Plot.R.ID_acc.long$ROI <- dplyr::recode(Plot.R.ID_acc.long$ROI,
 Plot.R.SIDE_acc       <- R.LEARN_SIDE_cuneus
 Plot.R.SIDE_acc$IPS   <- R.LEARN_SIDE_ips$R_IPS
 Plot.R.SIDE_acc$LOC   <- R.LEARN_SIDE_latocc$R_LATOCC
-Plot.R.SIDE_acc$STG   <- (R.LEARN_SIDE_stg_l$STG_L + R.LEARN_SIDE_stg_r$STG_R) /2
+Plot.R.SIDE_acc$SMG   <- (R.LEARN_SIDE_smg_l$STG_L + R.LEARN_SIDE_smg_r$STG_R) /2
 
-Plot.R.SIDE_acc.long <- gather(Plot.R.SIDE_acc, ROI, accuracy, Cuneus:STG, factor_key=TRUE)
+Plot.R.SIDE_acc.long <- gather(Plot.R.SIDE_acc, ROI, accuracy, Cuneus:SMG, factor_key=TRUE)

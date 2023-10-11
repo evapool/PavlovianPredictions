@@ -157,8 +157,8 @@ DB.spe = subset(DB.all, feature == "SPE")
 pp_lin_spe = ggplot(DB.spe, aes(x = RT, y = betas, fill = RT_PE, color = RT_PE)) +
   geom_point(alpha = .5, size = 3.5, position = position_jitterdodge(jitter.width = .0, jitter.height = 0)) +
   geom_smooth(method = lm, level = .95, alpha = .1, fullrange=TRUE) +
-  ylab('Betas of SPE (a.u)')+
-  xlab('RT [unexpected - expected] (a.u)')+
+  ylab('Betas of SPE')+
+  xlab('RT [unexpected - expected]')+
   scale_fill_manual(name="Outcome Feature",labels=c("Side", "Identity"), values=c("#FFCC33", "#990000")) +
   scale_color_manual(name="Outcome Feature",labels=c("Side", "Identity"), values=c("#FFCC33", "#990000")) +
   ylim(c(-1.5,2)) +
@@ -172,9 +172,6 @@ pp_lin_spe <- ggMarginal(pp_lin_spe + theme(legend.position = "bottom"),type = "
                          groupColour = TRUE, groupFill = T, alpha = 0.2)
 
 
-pdf(file.path(figures_path,'Figure_4A.pdf'))
-print(pp_lin_spe)
-dev.off()
 
 # write source file
 DB.spe.individual = DB.spe[c('ID','feature', 'betas', 'RT_PE', 'RT')]
@@ -188,8 +185,8 @@ DB.rpe = subset(DB.all, feature == "RPE")
 pp_lin_rpe = ggplot(DB.rpe, aes(x = RT, y = betas, fill = RT_PE, color = RT_PE)) +
   geom_point(alpha = .5, size = 3.5, position = position_jitterdodge(jitter.width = .0, jitter.height = 0)) +
   geom_smooth(method = lm, level = .95, alpha = .1, fullrange=TRUE) +
-  ylab('Betas of RPE (a.u)')+
-  xlab('RT [unexpected - expected] (a.u)')+
+  ylab('Betas of RPE')+
+  xlab('RT [unexpected - expected]')+
   scale_fill_manual(name="Outcome Feature",labels=c("Side", "Identity"), values=c("#FFCC33", "#990000")) +
   scale_color_manual(name="Outcome Feature",labels=c("Side", "Identity"), values=c("#FFCC33", "#990000")) +
   ylim(c(-1.5,2)) +
@@ -202,10 +199,14 @@ pp_lin_rpe  <- ggMarginal(pp_lin_rpe  + theme(legend.position = "bottom"),type =
                           groupColour = F, yparams = list(fill = "#56B4E9", color = "#000066",alpha=.2))
 
 
-pdf(file.path(figures_path,'Figure_4B.pdf'))
-print(pp_lin_rpe)
-dev.off()
 
+# combine the pannels
+brainbehav.pp = plot_grid(pp_lin_spe, pp_lin_rpe, nrow = 1, labels=c('A', 'B'), scale = 0.9, label_size = 28)
+
+
+pdf(file.path(figures_path,'Figure_4.pdf'),width=8,height=5)
+print(brainbehav.pp)
+dev.off()
 
 # write source file
 DB.rpe.individual = DB.rpe[c('ID','feature', 'betas', 'RT_PE', 'RT')]

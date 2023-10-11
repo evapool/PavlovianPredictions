@@ -102,7 +102,7 @@ pupil.deval.pp <-  ggplot(data = db.pupil.change,
   scale_color_manual(values=c("black","#000066")) +
   annotate("segment", x = 1, xend = 2, y = 0.3, yend = 0.3) +
   annotate("text", x = 1.5, y = 0.33, label = "**", size = 6) +
-  labs( title = '', x = 'CS', y = "Pupil (after - before)") 
+  labs( title = '', x = 'CS', y = "Pupil (post - pre)") 
 
 
 pupil.deval.pp = pupil.deval.pp  + timeline_theme + theme(legend.position="none")  + 
@@ -154,16 +154,13 @@ dw.deval.pp <- ggplot(data =db.dw.change,
   theme_bw() +
   scale_fill_manual(values=c("black","#E69F00")) + 
   scale_color_manual(values=c("black","#984C26")) +
-  labs( title = '',x = 'CS',y = "Dwell time (after - before)") 
+  labs( title = '',x = 'CS',y = "Dwell time (post - pre)") 
 
 #make it nice
 dw.deval.pp =  dw.deval.pp + timeline_theme + theme(legend.position="none")  + 
   theme(axis.text.y = element_text(angle=90, vjust= 1, hjust=.5))
 
-#print
-pdf(file.path(figures_path,'Supplementary_Figure_5_B.pdf'),width=5,height=8)
-print(dw.deval.pp )
-dev.off()
+
 
 #  write source file
 DW.individual = db.dw.change[c('ID','CS_ID', 'dw_change')]
@@ -174,6 +171,14 @@ DW.aggregate$mean = DW.aggregate$dw_change
 DW.aggregate <- subset(DW.aggregate, select = -c(dw_change ))
 write.csv(DW.aggregate,file.path(figures_path, 'SourceData_Supplementary_Figure_5_B_aggregate_estimates.csv'))
 
+
+# combine pannels in a single figure
+supp.eyes.pp = plot_grid(pupil.deval.pp, dw.deval.pp, nrow = 1, labels=c('A', 'B'), scale = 0.9, label_size = 28)
+
+#print
+pdf(file.path(figures_path,'Supplementary_Figure_5.pdf'))
+print(supp.eyes.pp)
+dev.off()
 
 
 
@@ -318,7 +323,7 @@ pp.id.roi.deval <- ggplot(data = id.bs, aes(x = CS, y = index, fill = CS, color 
   scale_y_continuous( limits = c(-6.5,4.5)) +
   scale_fill_manual(values=c("black","#CC0000")) + 
   scale_color_manual(values=c("black","#660000")) +
-  labs(title = '', x = 'CS', y = "Betas (after - before)") 
+  labs(title = '', x = 'CS', y = "Betas (post - pre)") 
 
 #make it nice
 pp.id.roi.deval <- pp.id.roi.deval + theme_bw( ) + pannel_theme
@@ -372,7 +377,7 @@ pp.side.roi.deval <- ggplot(data = side.bs.m, aes(x = CS, y = index, fill = CS, 
   labs(
     title = '',
     x = 'CS',
-    y = "Betas (after - before)"
+    y = "Betas (post - pre)"
   ) 
 
 
@@ -406,7 +411,7 @@ free_parameters = aggregate(alpha ~ ID + eta, data = MDL,  function(x) mean(x, n
 
 db.free_parameters <- gather(free_parameters,parameter_name, parameter_value, eta:alpha, factor_key=TRUE)
 
-db.free_parameters$parameter_name <- recode(db.free_parameters$parameter_name, "alpha" = "\u03b1",
+db.free_parameters$parameter_name <- dplyr::recode(db.free_parameters$parameter_name, "alpha" = "\u03b1",
                                             "eta" = "\u03B7")
 
 db.free_parameters.bg = summarySEwithin(db.free_parameters,
@@ -515,22 +520,22 @@ ttestBF(R.LEARN_SIDE_ips$R_IPS, mu = 0.5)
 
 # --------------------- stg l (supra marginal gyrus)
 # MEAN ACC AND CI
-t.test(R.LEARN_SIDE_stg_l$STG_L, mu = 0.5); se(R.LEARN_SIDE_stg_l$STG_L) 
+t.test(R.LEARN_SIDE_smg_l$STG_L, mu = 0.5); se(R.LEARN_SIDE_smg_l$STG_L) 
 # BF
-ttestBF(R.LEARN_SIDE_stg_l$STG_L, mu = 0.5)
+ttestBF(R.LEARN_SIDE_smg_l$STG_L, mu = 0.5)
 
 
 # --------------------- stg r (supra marginal gyrus)
 # MEAN ACC AND CI
-t.test(R.LEARN_SIDE_stg_r$STG_R, mu = 0.5); se(R.LEARN_SIDE_stg_r$STG_R) 
+t.test(R.LEARN_SIDE_smg_r$STG_R, mu = 0.5); se(R.LEARN_SIDE_smg_r$STG_R) 
 # BF
-ttestBF(R.LEARN_SIDE_stg_r$STG_R, mu = 0.5)
+ttestBF(R.LEARN_SIDE_smg_r$STG_R, mu = 0.5)
 
-# --------------------- stg average
+# --------------------- stg (supra marginal gyrus) average
 # MEAN ACC AND CI
-t.test(Plot.R.SIDE_acc$STG, mu = 0.5); se(Plot.R.SIDE_acc$STG) 
+t.test(Plot.R.SIDE_acc$SMG, mu = 0.5); se(Plot.R.SIDE_acc$SMG) 
 # BF
-ttestBF(Plot.R.SIDE_acc$STG, mu = 0.5)
+ttestBF(Plot.R.SIDE_acc$SMG, mu = 0.5)
 
 
 # --------------------- lat occ
@@ -583,7 +588,7 @@ write.csv(aggregate.control.acc.id,file.path(figures_path, 'SourceData_Supplemen
 
 # Plot SIDE
 
-Plot.R.SIDE_acc.long$ROI <- dplyr::recode(Plot.R.SIDE_acc.long$ROI, "STG" = "SMG")
+#Plot.R.SIDE_acc.long$ROI <- dplyr::recode(Plot.R.SIDE_acc.long$ROI, "STG" = "SMG")
 
 sumstat.side.control.acc <- summarySE(Plot.R.SIDE_acc.long,
                                       measurevar = c("accuracy"),

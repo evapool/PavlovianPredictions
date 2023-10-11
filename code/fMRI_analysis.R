@@ -294,7 +294,7 @@ rpe.deval.pp <-  ggplot(data = rpe.bs, aes (x=roi, y = diff_betas, fill = roi, c
   labs(
     title = '',
     x = 'ROI based on Reward PE',
-    y = "Betas [valued - devalued]"
+    y = "Betas [valued - devalued] (arb. units)"
   ) 
 
 
@@ -331,7 +331,7 @@ spe.deval.pp <- ggplot(data = spe.bs, aes (x=roi, y = diff_betas, fill = roi, co
   labs(
     title = '',
     x = 'ROI based on State PE',
-    y = "Betas [valued - devalued]"
+    y = "Betas [valued - devalued] (arb. units)"
   ) 
 
 spe.deval.pp = spe.deval.pp + timeline_theme + theme(legend.position="none") 
@@ -349,8 +349,6 @@ write.csv(spe.bs.source,file.path(figures_path, 'SourceData_3B_SPE_individual_es
 sumstat.spe$mean = sumstat.spe$diff_betas
 spe.bs.aggregate = sumstat.spe[c('roi','N', 'mean', 'ci')]
 write.csv(spe.bs.aggregate,file.path(figures_path, 'SourceData_3B_SPE_aggregated_estimates.csv'))
-
-
 
 
 
@@ -397,6 +395,8 @@ ttestBF(LEARN_ID_pcg$PCG_L, mu = 0.5)
 
 
 #----------------------- DEVALUATION  ID  --------------------------------------
+
+
 #-------------------------------------------- get variables to compute BF 
 ID_long$CS_b = ifelse(ID_long$CS == "devalued", -1, 1)
 ID_long$CS_b = factor(ID_long$CS_b)
@@ -503,17 +503,17 @@ t.test(LEARN_SIDE_ips$R_IPS, mu = 0.5); se(LEARN_SIDE_ips$R_IPS)
 ttestBF(LEARN_SIDE_ips$R_IPS, mu = 0.5)
 
 
-# --------------------- smg l
+# --------------------- stg  / smg l
 # MEAN ACC AND CI
-t.test(LEARN_SIDE_stg_l$STG_L, mu = 0.5); se(LEARN_SIDE_stg_l$STG_L) 
+t.test(LEARN_SIDE_smg_l$STG_L, mu = 0.5); se(LEARN_SIDE_smg_l$STG_L) 
 # BF
-ttestBF(LEARN_SIDE_stg_l$STG_L, mu = 0.5)
+ttestBF(LEARN_SIDE_smg_l$STG_L, mu = 0.5)
 
-# --------------------- smg r
+# --------------------- stg / smg r
 # MEAN ACC AND CI
-t.test(LEARN_SIDE_stg_r$STG_R, mu = 0.5); se(LEARN_SIDE_stg_r$STG_R) 
+t.test(LEARN_SIDE_smg_r$STG_R, mu = 0.5); se(LEARN_SIDE_smg_r$STG_R) 
 # BF
-ttestBF(LEARN_SIDE_stg_r$STG_R, mu = 0.5)
+ttestBF(LEARN_SIDE_smg_r$STG_R, mu = 0.5)
 
 
 
@@ -595,26 +595,24 @@ describe_posterior(fit_latocc_dev, estimate = "median",
 
 
 
-##------------------------------------------------ in each ROI: STG 
-stg_dev_mod = lme(index ~ CS,  data= subset(SIDE_long_m, roi == "STG"), random= ~ CS|ID)
-summary(stg_dev_mod) 
-intervals(stg_dev_mod, which = "fixed")
+##------------------------------------------------ in each ROI: STG /SMG
+smg_dev_mod = lme(index ~ CS,  data= subset(SIDE_long_m, roi == "SMG"), random= ~ CS|ID)
+summary(smg_dev_mod) 
+intervals(smg_dev_mod, which = "fixed")
 
 
 #BF
-stg_dev_mod  <- brm(scale(index) ~ CS_b + ( CS_b|ID), 
+smg_dev_mod  <- brm(scale(index) ~ CS_b + ( CS_b|ID), 
                     prior =  c(prior(normal(0,0.5), class="b", coef=""),prior(cauchy(0,0.5), class="sd")),
-                    data= subset(SIDE_long_m, roi == "STG"), # on the aggregate data
+                    data= subset(SIDE_long_m, roi == "SMG"), # on the aggregate data
                     iter = 40000, warmup=5000, 
                     family = gaussian(), save_pars = save_pars(all = TRUE))
 
 
-describe_posterior(stg_dev_mod , estimate = "median", 
+describe_posterior(smg_dev_mod , estimate = "median", 
                    dispersion = T, ci = .9, ci_method = "hdi", 
-                   bf_prior = stg_dev_mod, diagnostic = "Rhat",  
+                   bf_prior = smg_dev_mod, diagnostic = "Rhat",  
                    test = c("p_direction", "bf"))
-
-
 
 
 
@@ -654,7 +652,7 @@ id.deval.pp <-  ggplot(data = id.bs, aes (x=roi, y = index2, fill = roi, color =
   labs(
     title = '',
     x = 'Voxles decoding Identity',
-    y = "Betas [mean diff.]"
+    y = "Betas [mean diff.] "
   ) 
 
 
