@@ -285,7 +285,7 @@ dev.off()
 
 #  write source file
 source.supp.spe.bs = supp.spe.bs[c('ID','roi', 'value','betas')]
-write.csv(source.supp.rpe.bs,file.path(figures_path, 'SourceData_Supplementary_Figure_7_individual_estimates.csv'))
+write.csv(source.supp.spe.bs,file.path(figures_path, 'SourceData_Supplementary_Figure_7_individual_estimates.csv'))
 
 SUPP.SPE.aggregate = supp.sumstat.spe[c('roi','value','betas','se','N')]
 SUPP.SPE.aggregate$mean = SUPP.SPE.aggregate$betas
